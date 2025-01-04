@@ -18,33 +18,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-]
+import { useQuery } from "@tanstack/react-query"
+import { contabiliumApi } from "@/api/contabilium/api"
 
 export function CategorySelector() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+
+  const {data :marcas, isError} = useQuery({
+    queryKey: ['rubros'],
+    queryFn: contabiliumApi.getAllRubros,
+  })
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -56,8 +40,8 @@ export function CategorySelector() {
           className="w-[200px] justify-between"
         >
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+            ? marcas?.find((framework) => framework.name === value)?.name
+            : "Seleccionar marca..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -65,22 +49,26 @@ export function CategorySelector() {
         <Command>
           <CommandInput placeholder="Buscar marca..." className="h-9" />
           <CommandList>
-            <CommandEmpty>Marca no encontrada.</CommandEmpty>
+            <CommandEmpty>
+              {
+                isError ? 'Error al obtener todas las marcas' : 'Marca no encontrada.'
+              }
+              </CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {marcas?.map((framework) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={framework.id}
+                  value={framework.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
                 >
-                  {framework.label}
+                  {framework.name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === framework.name ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

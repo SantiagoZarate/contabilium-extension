@@ -8,6 +8,9 @@ export const Route = createLazyFileRoute('/marcas')({
 function RouteComponent() {
   return (
     <section className="flex flex-col items-center p-6 min-h-dvh">
+      <button>
+        iniciar sesion
+      </button>
       <CategorySelector />
     </section>
   )
