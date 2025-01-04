@@ -1,5 +1,6 @@
 import { GetPersonResponse } from "@/interfaces/person.interface";
 import { useQuery } from "@tanstack/react-query";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 const BASE_URL = "https://randomuser.me/api/?results=10&seed=foo";
@@ -10,7 +11,11 @@ function getPersons() {
     .then((response: GetPersonResponse) => response.results);
 }
 
-function App() {
+export const Route = createLazyFileRoute("/persons")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const [count, setCount] = useState(0);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["persons"],
@@ -31,5 +36,3 @@ function App() {
     </section>
   );
 }
-
-export default App;
