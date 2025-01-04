@@ -36,8 +36,6 @@ export const contabiliumApi: ContabiliumApi = {
       })
   },
   getAllRubros() {
-    const accessToken = localStorage.getItem('contabilium_access_token')
-
     return authRequest(BASE_URL + '/api/conceptos/rubros')
       .then(response => {
         if (!response.ok) {
@@ -52,7 +50,7 @@ export const contabiliumApi: ContabiliumApi = {
   getProducts({ page = 1 }) {
     const url = BASE_URL + '/api/conceptos/search?pageSize=0&page=' + page
     return authRequest(url).then(response => {
-      if (response.ok) {
+      if (!response.ok) {
         throw new Error('Error al obtener los productos')
       }
       return response.json()
