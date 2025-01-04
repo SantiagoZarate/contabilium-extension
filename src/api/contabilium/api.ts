@@ -1,3 +1,4 @@
+import envs from "@/config/envs";
 import { ContabiliumApi, GetAccessTokenReponse, GetAllRubrosResponse } from "./api.interface";
 import { mapRubro } from "./mapper";
 
@@ -8,9 +9,9 @@ export const contabiliumApi : ContabiliumApi = {
     const url = BASE_URL + '/token'
 
     const body = new URLSearchParams();
-    body.append('grant_type', 'client_credentials');  // or any other grant type you need
-    body.append('client_id', 'your_client_id');       // replace with your client_id
-    body.append('client_secret', 'your_client_secret'); // replace with your client_secret
+    body.append('grant_type', 'client_credentials');
+    body.append('client_id', 'ahumadamonica@hotmail.com');
+    body.append('client_secret', envs.API_SECRET);
   
     return fetch(url, {
       method: 'POST',
@@ -29,7 +30,15 @@ export const contabiliumApi : ContabiliumApi = {
     })
   },
   getAllRubros(){
-    return fetch(BASE_URL + '/api/conceptos/rubros').then(response => {
+    const accessToken = localStorage.getItem('contabilium_access_token')
+
+    return fetch(BASE_URL + '/api/conceptos/rubros', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`, // Pass the token as Bearer token
+        'Content-Type': 'application/json', // Set content type to JSON if needed
+      },
+    }).then(response => {
       if(!response.ok){
         throw new Error('Error al obtener todas las marcas')
       }

@@ -20,7 +20,6 @@ function RootComponent(){
             Marcas
           </Link>
         </section>
-        <p>token: {accessToken}</p>
         <section className="p-2">
           {
             isLoggedIn ? 'Sesion iniciada' : 

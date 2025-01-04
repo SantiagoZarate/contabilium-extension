@@ -25,7 +25,7 @@ export function CategorySelector() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
-  const {data :marcas, isError} = useQuery({
+  const {data :marcas, isError, isLoading} = useQuery({
     queryKey: ['rubros'],
     queryFn: contabiliumApi.getAllRubros,
   })
@@ -55,20 +55,21 @@ export function CategorySelector() {
               }
               </CommandEmpty>
             <CommandGroup>
-              {marcas?.map((framework) => (
+              {marcas?.map((marca) => (
                 <CommandItem
-                  key={framework.id}
-                  value={framework.name}
+                  key={marca.id}
+                  value={marca.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
+                  className="text-black"
                 >
-                  {framework.name}
+                  {marca.name}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === framework.name ? "opacity-100" : "opacity-0"
+                      value === marca.name ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

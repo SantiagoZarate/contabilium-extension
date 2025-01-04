@@ -14,7 +14,7 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
 
   // Load token from localStorage on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem('access_token');
+    const storedToken = localStorage.getItem('contabilium_access_token');
     if (storedToken) {
       setAccessToken(storedToken);
     } else {
@@ -25,6 +25,7 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
   const getAccessToken = () => {
     contabiliumApi.getAccessToken().then(response => {
       if(response){
+        localStorage.setItem('contabilium_access_token', response)
         setAccessToken(response)
       }
     });
