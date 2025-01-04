@@ -21,9 +21,13 @@ import {
 import { useQuery } from "@tanstack/react-query"
 import { contabiliumApi } from "@/api/contabilium/api"
 
-export function CategorySelector() {
+interface Props {
+  value : string
+  onUpdateValue : (newValue : string) => void
+}
+
+export function CategorySelector({value, onUpdateValue} : Props) {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
 
   const {data :marcas, isError, isLoading} = useQuery({
     queryKey: ['rubros'],
@@ -60,7 +64,7 @@ export function CategorySelector() {
                   key={marca.id}
                   value={marca.name}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
+                    onUpdateValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
                   className="text-black"
