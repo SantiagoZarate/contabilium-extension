@@ -10,6 +10,7 @@ import {
 
 // Import the generated route tree
 import { routeTree } from "@/routeTree.gen";
+import { AuthProvider } from "@/context/authContext";
 
 const hashHistory = createHashHistory();
 
@@ -28,7 +29,9 @@ const client = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
