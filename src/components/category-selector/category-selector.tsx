@@ -41,7 +41,7 @@ export function CategorySelector({value, onUpdateValue} : Props) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="flex-1 justify-between"
         >
           {value
             ? marcas?.find((framework) => framework.name === value)?.name

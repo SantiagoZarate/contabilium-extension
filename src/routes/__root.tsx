@@ -7,12 +7,12 @@ export const Route = createRootRoute({
   component: RootComponent
 });
 
-function RootComponent(){
+function RootComponent() {
   const { isLoggedIn, getAccessToken, accessToken } = useAuth()!
 
-  return(
-    <>
-      <header className="min-w-80 flex justify-between items-center">
+  return (
+    <section className="relative">
+      <header className="border-b border-border bg-background z-50 fixed top-0 w-full flex justify-between items-center">
         <section className="p-2 flex gap-2">
           <Link to="/" className="[&.active]:font-bold">
             Home
@@ -23,15 +23,16 @@ function RootComponent(){
         </section>
         <section className="p-2">
           {
-            isLoggedIn ? 'Sesion iniciada' : 
-            <button>iniciar sesion</button>
+            isLoggedIn ? 'Sesion iniciada' :
+              <button>iniciar sesion</button>
           }
         </section>
       </header>
-      <hr />
-      <Outlet />
+      <section className="mt-[34px]">
+        <Outlet />
+      </section>
       <TanStackRouterDevtools />
       <Toaster position="top-center" />
-    </>
+    </section>
   )
 } 

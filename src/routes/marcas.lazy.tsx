@@ -15,7 +15,7 @@ export const Route = createLazyFileRoute('/marcas')({
 function RouteComponent() {
   const [value, setValue] = useState<string>('')
   const lastBrand = useRef<string>('')
-  const {data, isLoading, isError, refetch, isFetching} = useQuery({
+  const {data, isError, refetch, isFetching} = useQuery({
     queryKey: ['products'],
     queryFn: () => contabiliumApi.getProducts({ page : 1 }),
     enabled: false
@@ -31,7 +31,7 @@ function RouteComponent() {
       <h1 className='font-bold'>
         Buscar productos por marca
       </h1>
-      <header className='flex gap-4'>
+      <header className='flex gap-4 w-full'>
         <CategorySelector onUpdateValue={(value) => setValue(value)} value={value} />
         <Button disabled={!value} onClick={handleSearchProducts}>Buscar</Button>
       </header>
