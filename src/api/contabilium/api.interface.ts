@@ -8,5 +8,6 @@ import { GetProductsParams, GetProductsResponse } from "./interface/getProducts"
 export interface ContabiliumApi {
   getAccessToken: () => Promise<void | GetAccessTokenReponse['access_token']>
   getAllRubros: () => Promise<void | RubroDTO[]>
-  getProducts: (params: GetProductsParams) => Promise<void | ItemDTO[]>
+  getProducts: (params: GetProductsParams) => Promise<ItemDTO[]>
+  getAllProducts: () => Promise<ItemDTO[]>
 }

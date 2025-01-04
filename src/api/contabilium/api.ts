@@ -55,8 +55,15 @@ export const contabiliumApi: ContabiliumApi = {
       }
       return response.json()
     }).then((response: GetProductsResponse) => response.Items.map(i => mapItem(i)))
-      .catch(e => {
-        console.error(e);
-      })
   },
+  async getAllProducts() {
+    const responses = await Promise.all(
+      Array.from({ length: 60 }, (_, i) => {
+        return this.getProducts({ page: i + 1 })
+      })
+    );
+
+    const items = responses.flat();
+    return items
+  }
 }

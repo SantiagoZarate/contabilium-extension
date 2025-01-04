@@ -15,15 +15,22 @@ export const Route = createLazyFileRoute('/marcas')({
 function RouteComponent() {
   const [value, setValue] = useState<string>('')
   const lastBrand = useRef<string>('')
-  const {data, isError, refetch, isFetching} = useQuery({
-    queryKey: ['products'],
-    queryFn: () => contabiliumApi.getProducts({ page : 1 }),
-    enabled: false
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['allProducts'],
+    queryFn: contabiliumApi.getAllProducts
   })
 
   const handleSearchProducts = () => {
     lastBrand.current = value
-    refetch().catch(e => toast(e))
+  }
+
+  const filteredProducts = data?.filter(
+    (product) => product.idRubro === value
+  )
+
+  if (isLoading) {
+    return <p>Loading...</p>
   }
 
   return (
@@ -36,9 +43,8 @@ function RouteComponent() {
         <Button disabled={!value} onClick={handleSearchProducts}>Buscar</Button>
       </header>
       {isError && <p>Error al obtener los prouctos de la marca {lastBrand.current}</p>}
-      {!isError && isFetching && <LoaderCircleIcon className='animate-spin'/>}
-      {!isError && !isFetching && data?.length &&
-        <DataTable columns={productsColumns} data={data} />
+      {filteredProducts?.length &&
+        <DataTable columns={productsColumns} data={filteredProducts} />
       }
     </section>
   )

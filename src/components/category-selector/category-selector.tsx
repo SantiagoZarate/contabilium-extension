@@ -22,14 +22,14 @@ import { useQuery } from "@tanstack/react-query"
 import { contabiliumApi } from "@/api/contabilium/api"
 
 interface Props {
-  value : string
-  onUpdateValue : (newValue : string) => void
+  value: string
+  onUpdateValue: (newValue: string) => void
 }
 
-export function CategorySelector({value, onUpdateValue} : Props) {
+export function CategorySelector({ value, onUpdateValue }: Props) {
   const [open, setOpen] = React.useState(false)
 
-  const {data :marcas, isError, isLoading} = useQuery({
+  const { data: marcas, isError, isLoading } = useQuery({
     queryKey: ['rubros'],
     queryFn: contabiliumApi.getAllRubros,
   })
@@ -57,12 +57,12 @@ export function CategorySelector({value, onUpdateValue} : Props) {
               {
                 isError ? 'Error al obtener todas las marcas' : 'Marca no encontrada.'
               }
-              </CommandEmpty>
+            </CommandEmpty>
             <CommandGroup>
               {marcas?.map((marca) => (
                 <CommandItem
                   key={marca.id}
-                  value={marca.name}
+                  value={String(marca.id)}
                   onSelect={(currentValue) => {
                     onUpdateValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
