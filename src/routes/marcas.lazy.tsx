@@ -43,6 +43,7 @@ function RouteComponent() {
           Buscar
         </Button>
       </header>
+      {!isError && <p>{filteredProducts?.length} Productos encontrados</p>}
       {isError && (
         <p>Error al obtener los prouctos de la marca {lastBrand.current}</p>
       )}
