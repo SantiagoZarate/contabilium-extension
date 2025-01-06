@@ -8,6 +8,9 @@ import { GetProductsResponse } from "./interface/getProducts";
 import { GetAccessTokenReponse } from "./interface/getAcessToken";
 import { GetAllRubrosResponse } from "./interface/getAllRubros";
 
+// Static data
+import PRODUCTS from '@/data/all-products.json'
+
 const BASE_URL = 'https://rest.contabilium.com'
 
 export const contabiliumApi: ContabiliumApi = {
@@ -57,6 +60,11 @@ export const contabiliumApi: ContabiliumApi = {
     }).then((response: GetProductsResponse) => response.Items.map(i => mapItem(i)))
   },
   async getAllProducts() {
+    // Por el momento devolvemos la informacion de manera estatica
+    // Ver si tenemos que tener una forma en la que se pueda obtener todos
+    // Los productos que se encuentran en contabilium
+    return PRODUCTS.map(p => mapItem(p))
+
     const responses = await Promise.all(
       Array.from({ length: 60 }, (_, i) => {
         return this.getProducts({ page: i + 1 })

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, Search } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -44,13 +44,17 @@ export function CategorySelector({ value, onUpdateValue }: Props) {
           className="flex-1 justify-between"
         >
           {value
-            ? marcas?.find((framework) => framework.name === value)?.name
+            ? marcas?.find((marca) => String(marca.id) === value)?.name
             : "Seleccionar marca..."}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" side="top">
-        <Command>
+      <PopoverContent className="p-0" side="top">
+        <Command filter={(item, search) => {
+          const matchedBrand = marcas?.find((marca) => String(marca.id) === item);
+          return matchedBrand?.name.toLowerCase().includes(search.toLowerCase()) ? 1 : 0;
+          // return marcas?.find(marca => item === String(marca.id))?.name.toLowerCase().indexOf(search.toLowerCase()) ?? 0
+        }}>
           <CommandInput placeholder="Buscar marca..." className="h-9" />
           <CommandList>
             <CommandEmpty>

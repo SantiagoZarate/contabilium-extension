@@ -5,7 +5,6 @@ import { DataTable } from '@/components/products-table/products-table'
 import { Button } from '@/components/ui/button'
 import { useQuery } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { LoaderCircleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 
 export const Route = createLazyFileRoute('/marcas')({
@@ -25,9 +24,9 @@ function RouteComponent() {
     lastBrand.current = value
   }
 
-  const filteredProducts = data?.filter(
+  const filteredProducts = value ? data?.filter(
     (product) => product.idRubro === value
-  )
+  ) : data
 
   if (isLoading) {
     return <p>Loading...</p>
