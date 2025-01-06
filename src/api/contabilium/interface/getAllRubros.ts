@@ -1,6 +1,6 @@
-export type GetAllRubrosResponse = Rubro[]
+export type GetAllRubrosResponse = Rubro[];
 
 export type Rubro = {
-  Id : number;
-  Nombre : string; 
-}
+  Id: number;
+  Nombre: string;
+};

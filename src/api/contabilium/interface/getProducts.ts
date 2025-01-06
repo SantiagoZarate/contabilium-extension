@@ -1,5 +1,5 @@
 export interface GetProductsParams {
-  page?: number
+  page?: number;
 }
 
 export interface GetProductsResponse {
@@ -39,9 +39,9 @@ export interface Item {
 }
 
 export enum Estado {
-  Activo = "Activo",
+  Activo = 'Activo',
 }
 
 export enum Tipo {
-  Producto = "Producto",
+  Producto = 'Producto',
 }

@@ -1,15 +1,20 @@
 import { contabiliumApi } from '@/api/contabilium/api';
-import React, { createContext, useState, useEffect, PropsWithChildren } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  PropsWithChildren,
+} from 'react';
 
 type AuthContextState = {
-  accessToken : string;
-  getAccessToken : () => void,
-  isLoggedIn : boolean
-}
+  accessToken: string;
+  getAccessToken: () => void;
+  isLoggedIn: boolean;
+};
 
 const AuthContext = createContext<AuthContextState | null>(null);
 
-export const AuthProvider = ({ children } : PropsWithChildren) => {
+export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [accessToken, setAccessToken] = useState<string>('');
 
   // Load token from localStorage on mount
@@ -18,21 +23,23 @@ export const AuthProvider = ({ children } : PropsWithChildren) => {
     if (storedToken) {
       setAccessToken(storedToken);
     } else {
-      getAccessToken()
+      getAccessToken();
     }
   }, []);
 
   const getAccessToken = () => {
-    contabiliumApi.getAccessToken().then(response => {
-      if(response){
-        localStorage.setItem('contabilium_access_token', response)
-        setAccessToken(response)
+    contabiliumApi.getAccessToken().then((response) => {
+      if (response) {
+        localStorage.setItem('contabilium_access_token', response);
+        setAccessToken(response);
       }
     });
-  }
+  };
 
   return (
-    <AuthContext.Provider value={{ accessToken, getAccessToken, isLoggedIn : accessToken !== null }}>
+    <AuthContext.Provider
+      value={{ accessToken, getAccessToken, isLoggedIn: accessToken !== null }}
+    >
       {children}
     </AuthContext.Provider>
   );

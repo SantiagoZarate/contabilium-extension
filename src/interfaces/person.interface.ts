@@ -31,8 +31,8 @@ export interface Dob {
 }
 
 export enum Gender {
-  Female = "female",
-  Male = "male",
+  Female = 'female',
+  Male = 'male',
 }
 
 export interface ID {
