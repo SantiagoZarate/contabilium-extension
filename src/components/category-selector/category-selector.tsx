@@ -29,11 +29,7 @@ interface Props {
 export function CategorySelector({ value, onUpdateValue }: Props) {
   const [open, setOpen] = React.useState(false);
 
-  const {
-    data: marcas,
-    isError,
-    isLoading,
-  } = useQuery({
+  const { data: marcas, isError } = useQuery({
     queryKey: ['rubros'],
     queryFn: contabiliumApi.getAllRubros,
   });
@@ -53,7 +49,7 @@ export function CategorySelector({ value, onUpdateValue }: Props) {
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0" side="top">
+      <PopoverContent className="w-full" side="bottom">
         <Command
           filter={(item, search) => {
             const matchedBrand = marcas?.find(
@@ -64,7 +60,6 @@ export function CategorySelector({ value, onUpdateValue }: Props) {
               .includes(search.toLowerCase())
               ? 1
               : 0;
-            // return marcas?.find(marca => item === String(marca.id))?.name.toLowerCase().indexOf(search.toLowerCase()) ?? 0
           }}
         >
           <CommandInput placeholder="Buscar marca..." className="h-9" />

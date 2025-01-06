@@ -25,7 +25,7 @@ function RouteComponent() {
 
   const filteredProducts = value
     ? data?.filter((product) => product.idRubro === value)
-    : data;
+    : [];
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -43,13 +43,16 @@ function RouteComponent() {
           Buscar
         </Button>
       </header>
-      {!isError && <p>{filteredProducts?.length} Productos encontrados</p>}
-      {isError && (
+      {!value && <p>Seleccione una marca</p>}
+      {value && !isError && (
+        <p>{filteredProducts?.length} Productos encontrados</p>
+      )}
+      {value && isError && (
         <p>Error al obtener los prouctos de la marca {lastBrand.current}</p>
       )}
-      {filteredProducts?.length && (
+      {filteredProducts?.length ? (
         <DataTable columns={productsColumns} data={filteredProducts} />
-      )}
+      ) : null}
     </section>
   );
 }
