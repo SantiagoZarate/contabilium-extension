@@ -47,6 +47,9 @@ importers:
       '@contabilium-extensions/contabilium-api':
         specifier: workspace:^
         version: link:../../packages/contabilium-api
+      '@contabilium-extensions/static-data':
+        specifier: workspace:^
+        version: link:../../packages/static-data
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.54.2(react@18.3.1))
@@ -178,7 +181,7 @@ importers:
   packages/contabilium-api:
     dependencies:
       '@contabilium-extensions/static-data':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../static-data
       zod:
         specifier: ^3.24.1

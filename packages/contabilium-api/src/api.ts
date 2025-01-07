@@ -1,15 +1,17 @@
-import { ContabiliumApi } from './api.interface';
-import { mapItem, mapRubro } from './mapper';
-import { authRequest } from './util/authRequest';
+import { ContabiliumApi } from "./api.interface";
+import { mapItem, mapRubro } from "./mapper";
+import { authRequest } from "./util/authRequest";
 
 // Response Interfaces
-import { GetProductsParams, GetProductsResponse } from './interface/getProducts';
-import { GetAccessTokenReponse } from './interface/getAcessToken';
-import { GetAllRubrosResponse } from './interface/getAllRubros';
+import { GetAccessTokenReponse } from "./interface/getAcessToken";
+import { GetAllRubrosResponse } from "./interface/getAllRubros";
+import {
+  GetProductsParams,
+  GetProductsResponse,
+} from "./interface/getProducts";
 
 // Static data
-import PRODUCTS from './data/products.json';
-import { GetStockByDepositosResponse } from './interface/getStockByDepositos';
+import { GetStockByDepositosResponse } from "./interface/getStockByDepositos";
 
 export class ContabiliumApiService implements ContabiliumApi {
   private baseUrl: string;
@@ -26,21 +28,21 @@ export class ContabiliumApiService implements ContabiliumApi {
     const url = `${this.baseUrl}/token`;
 
     const body = new URLSearchParams();
-    body.append('grant_type', 'client_credentials');
-    body.append('client_id', this.clientId);
-    body.append('client_secret', this.clientSecret);
+    body.append("grant_type", "client_credentials");
+    body.append("client_id", this.clientId);
+    body.append("client_secret", this.clientSecret);
 
     try {
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         body: body.toString(),
       });
 
       if (!response.ok) {
-        throw new Error('Error al obtener el access token');
+        throw new Error("Error al obtener el access token");
       }
 
       const result: GetAccessTokenReponse = await response.json();
@@ -57,7 +59,7 @@ export class ContabiliumApiService implements ContabiliumApi {
       const response = await authRequest(url);
 
       if (!response.ok) {
-        throw new Error('Error al obtener todas las marcas');
+        throw new Error("Error al obtener todas las marcas");
       }
 
       const result: GetAllRubrosResponse = await response.json();
@@ -74,20 +76,21 @@ export class ContabiliumApiService implements ContabiliumApi {
       const response = await authRequest(url);
 
       if (!response.ok) {
-        throw new Error('Error al obtener los productos');
+        throw new Error("Error al obtener los productos");
       }
 
       const result: GetProductsResponse = await response.json();
       return result.Items.map((i) => mapItem(i));
     } catch (error) {
-      return []
+      return [];
     }
   }
 
-  async getAllProducts(): Promise<any[]> {
+  async getAllProducts() {
     try {
       // Use static data for now
-      const staticProducts = PRODUCTS.map((p) => mapItem(p));
+      const data = await import("../../static-data/products.json");
+      const staticProducts = data.map((p) => mapItem(p));
       if (staticProducts.length > 0) {
         return staticProducts;
       }
@@ -103,19 +106,23 @@ export class ContabiliumApiService implements ContabiliumApi {
     }
   }
 
-  async getStockByDepositos(productSKU: string): Promise<GetStockByDepositosResponse | void> {
+  async getStockByDepositos(
+    productSKU: string
+  ): Promise<GetStockByDepositosResponse | void> {
     const url = `${this.baseUrl}/api/inventarios/getStockBySKU?codigo=${productSKU}`;
 
     try {
-      const response = await authRequest(url)
+      const response = await authRequest(url);
 
       if (!response.ok) {
-        throw new Error(`Error al obtener información del producto: ${response.statusText}`);
+        throw new Error(
+          `Error al obtener información del producto: ${response.statusText}`
+        );
       }
 
       const stockData: GetStockByDepositosResponse = await response.json();
       console.log("Stock por depósito:", stockData);
-      return stockData
+      return stockData;
     } catch (error) {
       console.error("Error al obtener el stock:", error);
     }
@@ -125,15 +132,17 @@ export class ContabiliumApiService implements ContabiliumApi {
     const url = `${this.baseUrl}/api/conceptos/search?filtro=${productName}`;
 
     try {
-      const response = await authRequest(url)
+      const response = await authRequest(url);
 
       if (!response.ok) {
-        throw new Error(`Error al obtener información del producto: ${response.statusText}`);
+        throw new Error(
+          `Error al obtener información del producto: ${response.statusText}`
+        );
       }
 
       const products: GetProductsResponse = await response.json();
       console.log("Productos:", products);
-      return products
+      return products;
     } catch (error) {
       console.error("Error al obtener productos por el nombre:", error);
     }
