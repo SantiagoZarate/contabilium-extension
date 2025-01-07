@@ -1,6 +1,6 @@
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
 import { defineConfig } from 'wxt';
-import { resolve } from 'node:path'
+import { resolve } from 'path'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -10,8 +10,6 @@ export default defineConfig({
   outDir: 'dist',
   vite: () => ({
     plugins: [TanStackRouterVite()],
+    envDir: resolve(__dirname, '../../')
   }),
-  alias: {
-    strings: resolve(__dirname, '../../packages/contabilium-api'),
-  }
 });
