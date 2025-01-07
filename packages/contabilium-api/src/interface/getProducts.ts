@@ -1,5 +1,5 @@
 export interface GetProductsParams {
-  page?: number;
+  page?: number | undefined;
 }
 
 export interface GetProductsResponse {

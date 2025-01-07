@@ -3,7 +3,7 @@
 import { Check, ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
-import { contabiliumApi } from '@/api/contabilium/api';
+import { contabiliumApi } from '@/api/contabilium';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -31,7 +31,7 @@ export function CategorySelector({ value, onUpdateValue }: Props) {
 
   const { data: marcas, isError } = useQuery({
     queryKey: ['rubros'],
-    queryFn: contabiliumApi.getAllRubros,
+    queryFn: () => contabiliumApi.getAllRubros(),
   });
 
   return (

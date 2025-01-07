@@ -1,4 +1,4 @@
-import { contabiliumApi } from '@/api/contabilium/api';
+import { contabiliumApi } from '@/api/contabilium';
 import React, {
   createContext,
   useState,

@@ -1,4 +1,4 @@
-import { contabiliumApi } from '@/api/contabilium/api';
+import { contabiliumApi } from '@/api/contabilium';
 import { CategorySelector } from '@/components/category-selector/category-selector';
 import { productsColumns } from '@/components/products-table/columns';
 import { DataTable } from '@/components/products-table/products-table';

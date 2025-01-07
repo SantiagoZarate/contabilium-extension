@@ -5,7 +5,6 @@ import { RubroDTO } from './dto/rubroDTO';
 import { GetAccessTokenReponse } from './interface/getAcessToken';
 import {
   GetProductsParams,
-  GetProductsResponse,
 } from './interface/getProducts';
 
 export interface ContabiliumApi {
