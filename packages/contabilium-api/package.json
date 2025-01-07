@@ -15,7 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "@contabilium-extensions/static-data": "workspace:^",
-    "dotenv": "16.4.7",
     "zod": "^3.24.1"
   },
   "devDependencies": {
