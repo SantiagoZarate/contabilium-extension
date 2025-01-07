@@ -10,12 +10,18 @@ importers:
 
   apps/disable-products:
     dependencies:
+      '@contabilium-extensions/contabilium-api':
+        specifier: workspace:^
+        version: link:../../packages/contabilium-api
       react:
         specifier: ^19.0.0
         version: 19.0.0
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@types/chrome':
         specifier: ^0.0.280

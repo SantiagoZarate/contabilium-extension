@@ -9,6 +9,7 @@ import { GetAllRubrosResponse } from './interface/getAllRubros';
 
 // Static data
 import PRODUCTS from './data/products.json';
+import { GetStockByDepositosResponse } from './interface/getStockByDepositos';
 
 export class ContabiliumApiService implements ContabiliumApi {
   private baseUrl: string;
@@ -99,6 +100,42 @@ export class ContabiliumApiService implements ContabiliumApi {
     } catch (error) {
       console.error(error);
       return [];
+    }
+  }
+
+  async getStockByDepositos(productSKU: string): Promise<GetStockByDepositosResponse | void> {
+    const url = `${this.baseUrl}/api/inventarios/getStockBySKU?codigo=${productSKU}`;
+
+    try {
+      const response = await authRequest(url)
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener información del producto: ${response.statusText}`);
+      }
+
+      const stockData: GetStockByDepositosResponse = await response.json();
+      console.log("Stock por depósito:", stockData);
+      return stockData
+    } catch (error) {
+      console.error("Error al obtener el stock:", error);
+    }
+  }
+
+  async getProductByName(productName: string) {
+    const url = `${this.baseUrl}/api/conceptos/search?filtro=${productName}`;
+
+    try {
+      const response = await authRequest(url)
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener información del producto: ${response.statusText}`);
+      }
+
+      const products: GetProductsResponse = await response.json();
+      console.log("Productos:", products);
+      return products
+    } catch (error) {
+      console.error("Error al obtener productos por el nombre:", error);
     }
   }
 }
