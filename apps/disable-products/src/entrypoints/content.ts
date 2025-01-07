@@ -14,10 +14,52 @@ export default defineContentScript({
 
       const productSKU = productData.Items[0]?.Codigo;
 
-      if (productSKU) {
-        const result = await contabiliumApi.getStockByDepositos(productSKU);
-        console.log({ result });
+      if (!productSKU) {
+        return
       }
+
+      const result = await contabiliumApi.getStockByDepositos(productSKU);
+
+      if (!result) {
+        return
+      }
+
+      const stockMercadoLibre = result.stock?.find(deposito => deposito.Codigo === 'MERCADO LIBRE');
+
+      if ((stockMercadoLibre?.StockActual ?? 0) <= 0) {
+        console.log('MERCADO LIBRE NO TIENE STOCK');
+        observeModalAndModifyContent();
+      }
+    }
+
+    function observeModalAndModifyContent(): void {
+      // Create a MutationObserver to monitor changes in the DOM
+      setTimeout(() => {
+        const modalContent = document.body.querySelector('.modal-content');
+        console.log(modalContent);
+
+        if (modalContent) {
+          // Check if the modal contains the specific text
+          const title = modalContent.querySelector('h4')
+          console.log(title);
+
+          //@ts-ignore
+          if (title) {
+            console.log('Modal content matches the text!');
+            const modalBody = modalContent.querySelector('.bootbox-body')!;
+
+            // Now, you can modify the modal content
+            modalBody.innerHTML = '<b>No hay stock de este producto para tu depósito</b>';
+
+            // Find and remove the 'Aceptar' button
+            const acceptButton = modalContent.querySelector('#btnAceptar');
+            if (acceptButton) {
+              acceptButton.remove(); // Remove the accept button
+            }
+          }
+          console.log('No existe el modal!');
+        }
+      }, 1000)
     }
 
     // Function to add click listeners to product items

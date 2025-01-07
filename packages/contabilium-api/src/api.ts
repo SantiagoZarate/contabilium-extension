@@ -114,7 +114,6 @@ export class ContabiliumApiService implements ContabiliumApi {
       }
 
       const stockData: GetStockByDepositosResponse = await response.json();
-      console.log("Stock por depósito:", stockData);
       return stockData
     } catch (error) {
       console.error("Error al obtener el stock:", error);
@@ -132,7 +131,6 @@ export class ContabiliumApiService implements ContabiliumApi {
       }
 
       const products: GetProductsResponse = await response.json();
-      console.log("Productos:", products);
       return products
     } catch (error) {
       console.error("Error al obtener productos por el nombre:", error);
