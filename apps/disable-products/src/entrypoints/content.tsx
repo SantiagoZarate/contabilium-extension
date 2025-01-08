@@ -12,8 +12,6 @@ export default defineContentScript({
   ],
   runAt: 'document_idle',
   main() {
-    let dialogContainer: HTMLDivElement;
-    let dialogRoot: ReactDOM.Root;
     // Function to handle product selection
     async function onProductSelect(productName: string) {
       const productData = await contabiliumApi.getProductByName(productName);
@@ -153,12 +151,8 @@ export default defineContentScript({
       if (token) {
         localStorage.setItem('contabilium_access_token', token);
       }
-      // injectDialog();
-      // injectDialogStyles();
       observeDOM();
       removeDuplicateButtons();
-      // dialogContainer = createDialogContainer();
-      // dialogRoot = ReactDOM.createRoot(dialogContainer);
       addClickListenersToProducts();
     });
   },
