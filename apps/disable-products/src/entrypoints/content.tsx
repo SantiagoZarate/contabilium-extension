@@ -1,4 +1,9 @@
 import { contabiliumApi } from '@/api/contabilium';
+import GarantiaDialog from '@/components/garantia-dialog';
+import { injectDialog } from '@/scripts/injectDialog';
+import { injectDialogStyles } from '@/scripts/injectDialogStyles';
+import { createDialogContainer } from '@/scripts/createDialogContainer';
+import ReactDOM from 'react-dom/client';
 
 export default defineContentScript({
   matches: [
@@ -7,6 +12,8 @@ export default defineContentScript({
   ],
   runAt: 'document_idle',
   main() {
+    let dialogContainer: HTMLDivElement;
+    let dialogRoot: ReactDOM.Root;
     // Function to handle product selection
     async function onProductSelect(productName: string) {
       const productData = await contabiliumApi.getProductByName(productName);
@@ -18,16 +25,18 @@ export default defineContentScript({
       const productSKU = productData.Items[0]?.Codigo;
 
       if (!productSKU) {
-        return
+        return;
       }
 
       const result = await contabiliumApi.getStockByDepositos(productSKU);
 
       if (!result) {
-        return
+        return;
       }
 
-      const stockMercadoLibre = result.stock?.find(deposito => deposito.Codigo === 'MERCADO LIBRE');
+      const stockMercadoLibre = result.stock?.find(
+        deposito => deposito.Codigo === 'MERCADO LIBRE',
+      );
 
       if ((stockMercadoLibre?.StockActual ?? 0) <= 0) {
         console.log('MERCADO LIBRE NO TIENE STOCK');
@@ -43,7 +52,7 @@ export default defineContentScript({
 
         if (modalContent) {
           // Check if the modal contains the specific text
-          const title = modalContent.querySelector('h4')
+          const title = modalContent.querySelector('h4');
           console.log(title);
 
           //@ts-ignore
@@ -52,7 +61,8 @@ export default defineContentScript({
             const modalBody = modalContent.querySelector('.bootbox-body')!;
 
             // Now, you can modify the modal content
-            modalBody.innerHTML = '<b>No hay stock de este producto para tu depósito</b>';
+            modalBody.innerHTML =
+              '<b>No hay stock de este producto para tu depósito</b>';
 
             // Find and remove the 'Aceptar' button
             const acceptButton = modalContent.querySelector('#btnAceptar');
@@ -62,20 +72,37 @@ export default defineContentScript({
           }
           console.log('No existe el modal!');
         }
-      }, 1000)
+      }, 1000);
+    }
+
+    function showDialog(title: string, content: string): void {
+      const dialog = document.getElementById('product-dialog')!;
+      const dialogTitle = document.getElementById('dialog-title')!;
+      const dialogContent = document.getElementById('dialog-content')!;
+
+      dialogTitle.textContent = title;
+      dialogContent.textContent = content;
+
+      // Show the dialog
+      dialog.classList.remove('hidden');
     }
 
     // Function to add click listeners to product items
     function addClickListenersToProducts(): void {
       const productItems =
         document.querySelectorAll<HTMLElement>('.item-product');
+
       productItems.forEach(item => {
         const productName = item.querySelector('h5')?.textContent?.trim();
-        if (productName) {
-          item.addEventListener('click', () => {
-            onProductSelect(productName);
-          });
+        if (!productName) {
+          return;
         }
+        item.addEventListener('click', () => {
+          const dialogContainer = createDialogContainer();
+          ReactDOM.createRoot(dialogContainer).render(
+            <GarantiaDialog title={productName} />,
+          );
+        });
       });
     }
 
@@ -126,9 +153,12 @@ export default defineContentScript({
       if (token) {
         localStorage.setItem('contabilium_access_token', token);
       }
-
+      // injectDialog();
+      // injectDialogStyles();
       observeDOM();
       removeDuplicateButtons();
+      // dialogContainer = createDialogContainer();
+      // dialogRoot = ReactDOM.createRoot(dialogContainer);
       addClickListenersToProducts();
     });
   },
