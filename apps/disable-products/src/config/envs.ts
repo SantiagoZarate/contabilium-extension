@@ -3,7 +3,7 @@ import { z } from 'zod';
 const envsSchema = z.object({
   API_SECRET: z.string(),
   API_ID: z.string(),
-  API_URL: z.string()
+  API_URL: z.string(),
 });
 
 export default envsSchema.parse({

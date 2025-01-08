@@ -1,18 +1,13 @@
 import js from '@eslint/js';
+import prettierPlugin from 'eslint-plugin-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import tailwind from 'eslint-plugin-tailwindcss';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import prettierPlugin from 'eslint-plugin-prettier';
 
 export default tseslint.config(
   {
-    ignores: [
-      'dist',
-      'src/components/ui/toast.tsx',
-      'src/components/ui/use-toast.ts',
-    ],
+    ignores: ['dist'],
   },
   {
     extends: [

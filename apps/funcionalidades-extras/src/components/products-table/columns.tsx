@@ -1,9 +1,9 @@
 'use client';
 
-import { ItemDTO } from '@/api/contabilium/dto/itemDTO';
+import { ItemDTO } from '@api/dto/itemDTO';
+import { Button } from '@contabilium-extensions/ui';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from '../ui/button';
 
 export const productsColumns: ColumnDef<ItemDTO>[] = [
   {

@@ -1,6 +1,10 @@
-import envs from '@/config/envs'
-import { ContabiliumApiService } from '@contabilium-extensions/contabilium-api/service'
+import envs from '@/config/envs';
+import { ContabiliumApiService } from '@contabilium-extensions/contabilium-api/service';
 
-const { API_ID, API_SECRET, API_URL } = envs
+const { API_ID, API_SECRET, API_URL } = envs;
 
-export const contabiliumApi = new ContabiliumApiService(API_URL, API_ID, API_SECRET)
+export const contabiliumApi = new ContabiliumApiService(
+  API_URL,
+  API_ID,
+  API_SECRET,
+);

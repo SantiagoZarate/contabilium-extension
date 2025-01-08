@@ -1,4 +1,3 @@
-import { Toaster } from '@/components/ui/sonner';
 import { useAuth } from '@/context/authContext';
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
@@ -29,7 +28,6 @@ function RootComponent() {
         <Outlet />
       </section>
       <TanStackRouterDevtools />
-      <Toaster position="top-center" />
     </section>
   );
 }

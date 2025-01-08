@@ -4,21 +4,19 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import * as React from 'react';
 
 import { contabiliumApi } from '@/api/contabilium';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
+  Button,
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+} from '@contabilium-extensions/ui';
 import { useQuery } from '@tanstack/react-query';
 
 interface Props {
@@ -28,6 +26,8 @@ interface Props {
 
 export function CategorySelector({ value, onUpdateValue }: Props) {
   const [open, setOpen] = React.useState(false);
+
+  const a = 'asdasd';
 
   const { data: marcas, isError } = useQuery({
     queryKey: ['rubros'],
@@ -44,16 +44,16 @@ export function CategorySelector({ value, onUpdateValue }: Props) {
           className="flex-1 justify-between"
         >
           {value
-            ? marcas?.find((marca) => String(marca.id) === value)?.name
+            ? marcas?.find(marca => String(marca.id) === value)?.name
             : 'Seleccionar marca...'}
-          <ChevronsUpDown className="opacity-50" />
+          <ChevronsUpDown className="bg-emerald-200 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full" side="bottom">
         <Command
           filter={(item, search) => {
             const matchedBrand = marcas?.find(
-              (marca) => String(marca.id) === item,
+              marca => String(marca.id) === item,
             );
             return matchedBrand?.name
               .toLowerCase()
@@ -70,11 +70,11 @@ export function CategorySelector({ value, onUpdateValue }: Props) {
                 : 'Marca no encontrada.'}
             </CommandEmpty>
             <CommandGroup>
-              {marcas?.map((marca) => (
+              {marcas?.map(marca => (
                 <CommandItem
                   key={marca.id}
                   value={String(marca.id)}
-                  onSelect={(currentValue) => {
+                  onSelect={currentValue => {
                     onUpdateValue(currentValue === value ? '' : currentValue);
                     setOpen(false);
                   }}

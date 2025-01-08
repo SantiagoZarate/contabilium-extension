@@ -3,12 +3,14 @@ import { mapItem, mapRubro } from './mapper';
 import { authRequest } from './util/authRequest';
 
 // Response Interfaces
-import { GetProductsParams, GetProductsResponse } from './interface/getProducts';
 import { GetAccessTokenReponse } from './interface/getAcessToken';
 import { GetAllRubrosResponse } from './interface/getAllRubros';
+import {
+  GetProductsParams,
+  GetProductsResponse,
+} from './interface/getProducts';
 
 // Static data
-import PRODUCTS from './data/products.json';
 import { GetStockByDepositosResponse } from './interface/getStockByDepositos';
 
 export class ContabiliumApiService implements ContabiliumApi {
@@ -61,7 +63,7 @@ export class ContabiliumApiService implements ContabiliumApi {
       }
 
       const result: GetAllRubrosResponse = await response.json();
-      return result.map((r) => mapRubro(r));
+      return result.map(r => mapRubro(r));
     } catch (error) {
       console.error(error);
     }
@@ -78,22 +80,32 @@ export class ContabiliumApiService implements ContabiliumApi {
       }
 
       const result: GetProductsResponse = await response.json();
-      return result.Items.map((i) => mapItem(i));
+      return result.Items.map(i => mapItem(i));
     } catch (error) {
-      return []
+      return [];
     }
   }
 
-  async getAllProducts(): Promise<any[]> {
+  async getAllProducts() {
     try {
       // Use static data for now
-      const staticProducts = PRODUCTS.map((p) => mapItem(p));
+      const data = await import('../../static-data/products.json').then(
+        m => m.default,
+      );
+      console.log({ data });
+
+      const staticProducts = data.map(p => mapItem(p));
+
+      console.log({
+        staticProducts,
+      });
+
       if (staticProducts.length > 0) {
         return staticProducts;
       }
 
       const responses = await Promise.all(
-        Array.from({ length: 60 }, (_, i) => this.getProducts({ page: i + 1 }))
+        Array.from({ length: 60 }, (_, i) => this.getProducts({ page: i + 1 })),
       );
 
       return responses.flat();
@@ -103,20 +115,25 @@ export class ContabiliumApiService implements ContabiliumApi {
     }
   }
 
-  async getStockByDepositos(productSKU: string): Promise<GetStockByDepositosResponse | void> {
+  async getStockByDepositos(
+    productSKU: string,
+  ): Promise<GetStockByDepositosResponse | void> {
     const url = `${this.baseUrl}/api/inventarios/getStockBySKU?codigo=${productSKU}`;
 
     try {
-      const response = await authRequest(url)
+      const response = await authRequest(url);
 
       if (!response.ok) {
-        throw new Error(`Error al obtener información del producto: ${response.statusText}`);
+        throw new Error(
+          `Error al obtener información del producto: ${response.statusText}`,
+        );
       }
 
       const stockData: GetStockByDepositosResponse = await response.json();
-      return stockData
+      console.log('Stock por depósito:', stockData);
+      return stockData;
     } catch (error) {
-      console.error("Error al obtener el stock:", error);
+      console.error('Error al obtener el stock:', error);
     }
   }
 
@@ -124,16 +141,20 @@ export class ContabiliumApiService implements ContabiliumApi {
     const url = `${this.baseUrl}/api/conceptos/search?filtro=${productName}`;
 
     try {
-      const response = await authRequest(url)
+      const response = await authRequest(url);
 
       if (!response.ok) {
-        throw new Error(`Error al obtener información del producto: ${response.statusText}`);
+        throw new Error(
+          `Error al obtener información del producto: ${response.statusText}`,
+        );
       }
 
       const products: GetProductsResponse = await response.json();
-      return products
+
+      console.log('Productos:', products);
+      return products;
     } catch (error) {
-      console.error("Error al obtener productos por el nombre:", error);
+      console.error('Error al obtener productos por el nombre:', error);
     }
   }
 }

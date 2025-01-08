@@ -3,10 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "fn": "pnpm --filter @contabilium-extensions/funcionalidades-extras-contabilium",
+    "dp": "pnpm --filter @contabilium-extensions/disable-products",
+    "api": "pnpm --filter @contabilium-extensions/contabilium-api",
+    "prettier": "pnpm --filter @contabilium-extensions/prettier-config",
+    "eslint": "pnpm --filter @contabilium-extensions/eslint-config",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@contabilium-extensions/eslint-config": "workspace:^",
+    "@contabilium-extensions/prettier-config": "workspace:^"
+  }
 }

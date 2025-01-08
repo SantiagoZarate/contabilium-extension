@@ -1,5 +1,5 @@
 {
-  "name": "wxt-react-starter",
+  "name": "@contabilium-extensions/disable-products",
   "description": "manifest.json description",
   "private": true,
   "version": "0.0.0",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@contabilium-extensions/contabilium-api": "workspace:^",
+    "@contabilium-extensions/ui": "workspace:^",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^3.24.1"

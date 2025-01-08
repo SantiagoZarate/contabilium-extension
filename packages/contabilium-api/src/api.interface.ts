@@ -15,6 +15,10 @@ export interface ContabiliumApi {
   getAllRubros: () => Promise<void | RubroDTO[]>;
   getProducts: (params: GetProductsParams) => Promise<ItemDTO[]>;
   getAllProducts: () => Promise<ItemDTO[]>;
-  getStockByDepositos: (productSKU: string) => Promise<void | GetStockByDepositosResponse>;
-  getProductByName: (productName: string) => Promise<void | GetProductsResponse>
+  getStockByDepositos: (
+    productSKU: string,
+  ) => Promise<void | GetStockByDepositosResponse>;
+  getProductByName: (
+    productName: string,
+  ) => Promise<void | GetProductsResponse>;
 }

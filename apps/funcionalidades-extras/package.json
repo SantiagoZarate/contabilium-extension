@@ -16,6 +16,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@contabilium-extensions/contabilium-api": "workspace:^",
+    "@contabilium-extensions/ui": "workspace:*",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-label": "^2.1.1",
@@ -35,10 +37,11 @@
     "sonner": "^1.7.1",
     "tailwind-merge": "2.6.0",
     "tailwindcss-animate": "1.0.7",
-    "zod": "^3.24.1",
-    "@contabilium-extensions/contabilium-api": "workspace:^"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@contabilium-extensions/eslint-config": "workspace:^",
+    "@contabilium-extensions/prettier-config": "workspace:^",
     "@eslint/js": "^9.9.0",
     "@tanstack/router-devtools": "^1.95.0",
     "@tanstack/router-plugin": "^1.95.0",
