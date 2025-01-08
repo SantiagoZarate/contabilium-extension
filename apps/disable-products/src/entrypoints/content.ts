@@ -1,15 +1,18 @@
-import { contabiliumApi } from "@/api/contabilium";
+import { contabiliumApi } from '@/api/contabilium';
 
 export default defineContentScript({
-  matches: ['https://pos.contabilium.com/', 'https://app.contabilium.com/comprobantes.aspx'],
-  runAt: "document_idle",
+  matches: [
+    'https://pos.contabilium.com/',
+    'https://app.contabilium.com/comprobantes.aspx',
+  ],
+  runAt: 'document_idle',
   main() {
     // Function to handle product selection
     async function onProductSelect(productName: string) {
       const productData = await contabiliumApi.getProductByName(productName);
 
       if (!productData) {
-        return
+        return;
       }
 
       const productSKU = productData.Items[0]?.Codigo;
@@ -22,11 +25,12 @@ export default defineContentScript({
 
     // Function to add click listeners to product items
     function addClickListenersToProducts(): void {
-      const productItems = document.querySelectorAll<HTMLElement>(".item-product");
-      productItems.forEach((item) => {
-        const productName = item.querySelector("h5")?.textContent?.trim();
+      const productItems =
+        document.querySelectorAll<HTMLElement>('.item-product');
+      productItems.forEach(item => {
+        const productName = item.querySelector('h5')?.textContent?.trim();
         if (productName) {
-          item.addEventListener("click", () => {
+          item.addEventListener('click', () => {
             onProductSelect(productName);
           });
         }
@@ -35,24 +39,26 @@ export default defineContentScript({
 
     // Function to remove duplicate buttons
     function removeDuplicateButtons(): void {
-      if (window.location.pathname === "/comprobantes.aspx") {
-        console.log("Intentando borrar botones duplicados");
+      if (window.location.pathname === '/comprobantes.aspx') {
+        console.log('Intentando borrar botones duplicados');
         const duplicateButtons = document.querySelectorAll<HTMLButtonElement>(
-          'button[onclick^="duplicar("][class="delete-row"]'
+          'button[onclick^="duplicar("][class="delete-row"]',
         );
-        duplicateButtons.forEach((button) => button.remove());
+        duplicateButtons.forEach(button => button.remove());
       }
     }
 
     // Function to disable out-of-stock items
     function disableOutOfStockItems(): void {
-      const items = document.querySelectorAll<HTMLElement>(".item-product");
-      items.forEach((item) => {
-        const stockText = item.querySelector(".info .code b")?.textContent?.trim();
-        if (stockText === "Stock: 0") {
-          item.style.backgroundColor = "#f8d7da";
-          item.style.pointerEvents = "none";
-          item.style.opacity = "0.5";
+      const items = document.querySelectorAll<HTMLElement>('.item-product');
+      items.forEach(item => {
+        const stockText = item
+          .querySelector('.info .code b')
+          ?.textContent?.trim();
+        if (stockText === 'Stock: 0') {
+          item.style.backgroundColor = '#f8d7da';
+          item.style.pointerEvents = 'none';
+          item.style.opacity = '0.5';
         }
       });
     }
@@ -72,11 +78,11 @@ export default defineContentScript({
     }
 
     // Run when the page has loaded
-    window.addEventListener("load", async () => {
+    window.addEventListener('load', async () => {
       // Get access token and store it in local storage
       const token = await contabiliumApi.getAccessToken();
       if (token) {
-        localStorage.setItem('contabilium_access_token', token)
+        localStorage.setItem('contabilium_access_token', token);
       }
 
       observeDOM();
