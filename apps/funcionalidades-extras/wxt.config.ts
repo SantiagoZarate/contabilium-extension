@@ -1,6 +1,6 @@
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite';
+import { resolve } from 'path';
 import { defineConfig } from 'wxt';
-import { resolve } from 'path'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -10,6 +10,10 @@ export default defineConfig({
   outDir: 'dist',
   vite: () => ({
     plugins: [TanStackRouterVite()],
-    envDir: resolve(__dirname, '../../')
+    envDir: resolve(__dirname, '../../'),
   }),
+  alias: {
+    // Directory:
+    ui: resolve(__dirname, '../../packages/ui/src/components'),
+  },
 });

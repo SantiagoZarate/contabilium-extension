@@ -12,17 +12,17 @@ import {
 } from '@tanstack/react-table';
 
 import {
+  Button,
+  Input,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import React from 'react';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+} from '@contabilium-extensions/ui';
 import { DeleteIcon } from 'lucide-react';
+import React from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
