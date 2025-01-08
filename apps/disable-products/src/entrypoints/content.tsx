@@ -1,9 +1,6 @@
 import { contabiliumApi } from '@/api/contabilium';
-import GarantiaDialog from '@/components/garantia-dialog';
-import { injectDialog } from '@/scripts/injectDialog';
-import { injectDialogStyles } from '@/scripts/injectDialogStyles';
-import { createDialogContainer } from '@/scripts/createDialogContainer';
-import ReactDOM from 'react-dom/client';
+import { addDisableStyles } from '@/scripts/addDisableStyles';
+import { removeDuplicateButtons } from '@/scripts/removeDuplicateButtons';
 
 export default defineContentScript({
   matches: [
@@ -86,46 +83,55 @@ export default defineContentScript({
     }
 
     // Function to add click listeners to product items
-    function addClickListenersToProducts(): void {
+    async function addClickListenersToProducts() {
       const productItems =
         document.querySelectorAll<HTMLElement>('.item-product');
 
-      productItems.forEach(item => {
+      productItems.forEach(async item => {
         const productName = item.querySelector('h5')?.textContent?.trim();
-        if (!productName) {
-          return;
-        }
+
         item.addEventListener('click', () => {
-          const dialogContainer = createDialogContainer();
-          ReactDOM.createRoot(dialogContainer).render(
-            <GarantiaDialog title={productName} />,
-          );
+          console.log('CLICKEANDO ITEM ' + productName);
         });
       });
     }
 
-    // Function to remove duplicate buttons
-    function removeDuplicateButtons(): void {
-      if (window.location.pathname === '/comprobantes.aspx') {
-        console.log('Intentando borrar botones duplicados');
-        const duplicateButtons = document.querySelectorAll<HTMLButtonElement>(
-          'button[onclick^="duplicar("][class="delete-row"]',
-        );
-        duplicateButtons.forEach(button => button.remove());
-      }
-    }
-
     // Function to disable out-of-stock items
-    function disableOutOfStockItems(): void {
+    async function disableOutOfStockItems() {
       const items = document.querySelectorAll<HTMLElement>('.item-product');
-      items.forEach(item => {
+      items.forEach(async item => {
         const stockText = item
           .querySelector('.info .code b')
           ?.textContent?.trim();
+
+        // Si el stock esta en 0, desabilitarlo de una
         if (stockText === 'Stock: 0') {
-          item.style.backgroundColor = '#f8d7da';
-          item.style.pointerEvents = 'none';
-          item.style.opacity = '0.5';
+          addDisableStyles(item);
+        } else {
+          // Sino hacer una request y checkear si tiene stock para mercado libre
+          const productName = item.querySelector('h5')?.textContent?.trim()!;
+          const product = await contabiliumApi.getProductByName(productName);
+          console.log('Producto fetcheado:', product?.Items[0].Nombre);
+
+          const productSku = product?.Items[0].Codigo;
+
+          if (!productSku) {
+            return;
+          }
+
+          const stock = await contabiliumApi.getStockByDepositos(productSku);
+
+          if (!stock) {
+            return;
+          }
+
+          const mercadoLibreStock = stock.stock?.find(
+            deposito => deposito.Codigo === 'MERCADO LIBRE',
+          );
+
+          if (mercadoLibreStock?.StockActual === 0) {
+            addDisableStyles(item);
+          }
         }
       });
     }

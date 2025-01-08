@@ -150,8 +150,6 @@ export class ContabiliumApiService implements ContabiliumApi {
       }
 
       const products: GetProductsResponse = await response.json();
-
-      console.log('Productos:', products);
       return products;
     } catch (error) {
       console.error('Error al obtener productos por el nombre:', error);
