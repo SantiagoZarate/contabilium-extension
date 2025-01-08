@@ -89,8 +89,17 @@ export class ContabiliumApiService implements ContabiliumApi {
   async getAllProducts() {
     try {
       // Use static data for now
-      const data = await import("../../static-data/products.json");
+      const data = await import("../../static-data/products.json").then(
+        (m) => m.default
+      );
+      console.log({ data });
+
       const staticProducts = data.map((p) => mapItem(p));
+
+      console.log({
+        staticProducts,
+      });
+
       if (staticProducts.length > 0) {
         return staticProducts;
       }

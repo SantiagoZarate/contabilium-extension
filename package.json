@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "fn": "pnpm --filter @contabilium-extensions/funcionalidades-extras-contabilium"
+    "fn": "pnpm --filter @contabilium-extensions/funcionalidades-extras-contabilium",
+    "api": "pnpm --filter @contabilium-extensions/contabilium-api"
   },
   "keywords": [],
   "author": "",

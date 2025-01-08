@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@contabilium-extensions/static-data": "workspace:*",
+    "@contabilium-extensions/static-data": "workspace:^",
     "zod": "^3.24.1"
   },
   "devDependencies": {

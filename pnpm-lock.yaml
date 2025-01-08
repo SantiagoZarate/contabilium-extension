@@ -181,7 +181,7 @@ importers:
   packages/contabilium-api:
     dependencies:
       '@contabilium-extensions/static-data':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../static-data
       zod:
         specifier: ^3.24.1
