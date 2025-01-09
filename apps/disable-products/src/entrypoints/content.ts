@@ -9,6 +9,7 @@ export default defineContentScript({
   ],
   runAt: 'document_idle',
   main() {
+    const DEPOSITO = 'LOCAL RIVADAVIA';
     // Function to handle product selection
     async function onProductSelect(productName: string) {
       const productData = await contabiliumApi.getProductByName(productName);
@@ -30,11 +31,11 @@ export default defineContentScript({
       }
 
       const stockMercadoLibre = result.stock?.find(
-        deposito => deposito.Codigo === 'MERCADO LIBRE',
+        deposito => deposito.Codigo === DEPOSITO,
       );
 
       if ((stockMercadoLibre?.StockActual ?? 0) <= 0) {
-        console.log('MERCADO LIBRE NO TIENE STOCK');
+        console.log(DEPOSITO + ' NO TIENE STOCK');
         observeModalAndModifyContent();
       }
     }
@@ -82,18 +83,16 @@ export default defineContentScript({
       dialog.classList.remove('hidden');
     }
 
-    async function addClickListenersToProducts() {
-      const productItems =
-        document.querySelectorAll<HTMLElement>('.item-product');
+    // async function addClickListenersToProducts() {
+    //   const productItems =
+    //     document.querySelectorAll<HTMLElement>('.item-product');
 
-      productItems.forEach(async item => {
-        const productName = item.querySelector('h5')?.textContent?.trim();
+    //   productItems.forEach(async item => {
+    //     const productName = item.querySelector('h5')?.textContent?.trim();
 
-        item.addEventListener('click', () => {
-          console.log('CLICKEANDO ITEM ' + productName);
-        });
-      });
-    }
+    //     item.addEventListener('click', () => {});
+    //   });
+    // }
 
     // Function to disable out-of-stock items
     async function disableOutOfStockItems() {
@@ -110,7 +109,6 @@ export default defineContentScript({
           // Sino hacer una request y checkear si tiene stock para mercado libre
           const productName = item.querySelector('h5')?.textContent?.trim()!;
           const product = await contabiliumApi.getProductByName(productName);
-          console.log('Producto fetcheado:', product?.Items[0].Nombre);
 
           const productSku = product?.Items[0].Codigo;
 
@@ -143,7 +141,7 @@ export default defineContentScript({
       const observer = new MutationObserver(() => {
         disableOutOfStockItems();
         removeDuplicateButtons();
-        addClickListenersToProducts();
+        // addClickListenersToProducts();
       });
 
       observer.observe(targetNode, config);
@@ -158,13 +156,7 @@ export default defineContentScript({
       }
       observeDOM();
       removeDuplicateButtons();
-      addClickListenersToProducts();
-      console.log('CORRIENDO EXTENSION');
-
-      const depositoElement = document.getElementById('deposito');
-      console.log({
-        depositoElement,
-      });
+      // addClickListenersToProducts();
     });
   },
 });
