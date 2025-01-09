@@ -123,7 +123,7 @@ export default defineContentScript({
           }
 
           const mercadoLibreStock = stock.stock?.find(
-            deposito => deposito.Codigo === 'MERCADO LIBRE',
+            deposito => deposito.Codigo === DEPOSITO,
           );
 
           if (mercadoLibreStock?.StockActual === 0) {
