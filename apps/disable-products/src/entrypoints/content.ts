@@ -9,7 +9,7 @@ export default defineContentScript({
   ],
   runAt: 'document_idle',
   main() {
-    const DEPOSITO = 'LOCAL RIVADAVIA';
+    const DEPOSITO = 'SHOWROOM PRINGLES';
     // Function to handle product selection
     async function onProductSelect(productName: string) {
       const productData = await contabiliumApi.getProductByName(productName);
