@@ -7,6 +7,8 @@
   "exports": {
     "./globals.css": "./src/index.css",
     "./tailwind.config": "./tailwind.config.js",
+    "./postcss.config": "./postcss.config.js",
+    "./icons": "./src/icons.ts",
     ".": "./src/index.ts"
   },
   "scripts": {

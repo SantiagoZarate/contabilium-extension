@@ -82,7 +82,6 @@ export default defineContentScript({
       dialog.classList.remove('hidden');
     }
 
-    // Function to add click listeners to product items
     async function addClickListenersToProducts() {
       const productItems =
         document.querySelectorAll<HTMLElement>('.item-product');
@@ -160,6 +159,12 @@ export default defineContentScript({
       observeDOM();
       removeDuplicateButtons();
       addClickListenersToProducts();
+      console.log('CORRIENDO EXTENSION');
+
+      const depositoElement = document.getElementById('deposito');
+      console.log({
+        depositoElement,
+      });
     });
   },
 });

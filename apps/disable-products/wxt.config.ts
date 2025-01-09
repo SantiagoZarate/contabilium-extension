@@ -1,5 +1,5 @@
-import { defineConfig } from 'wxt';
 import { resolve } from 'path';
+import { defineConfig } from 'wxt';
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -10,4 +10,7 @@ export default defineConfig({
   vite: () => ({
     envDir: resolve(__dirname, '../../'),
   }),
+  manifest: {
+    permissions: ['storage'],
+  },
 });
