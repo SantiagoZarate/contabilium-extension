@@ -130,7 +130,6 @@ export class ContabiliumApiService implements ContabiliumApi {
       }
 
       const stockData: GetStockByDepositosResponse = await response.json();
-      console.log('Stock por depósito:', stockData);
       return stockData;
     } catch (error) {
       console.error('Error al obtener el stock:', error);
