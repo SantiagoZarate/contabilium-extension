@@ -1,4 +1,6 @@
+import { injectProductRow } from './injectProductRow';
 import { openCustomPrintWindow } from './openCustomPrintWindow';
+import { updateTotalPrice } from './updateTotalPrice';
 
 export function injectDialog(): void {
   // Check if the dialog is already injected
@@ -81,6 +83,9 @@ export function injectDialog(): void {
 
     const productName = document.getElementById('dialog-placeholder');
 
+    // Para obtener la garantia que tiene el producto hacer un fetch por nombre, de ahi extraer
+    // El campo de observaciones, que tiene la garantia en formato 3L, 3F o 12F
+
     // Open the print popup
     openCustomPrintWindow(
       productName?.textContent!,
@@ -103,31 +108,15 @@ export function injectDialog(): void {
     const tableBody = document.querySelector('#tablaFacturacion tbody');
     if (tableBody) {
       // Create a new row
-      const newRow = document.createElement('tr');
-      newRow.dataset.dialog = 'row';
+      const newRow = injectProductRow({
+        description: warrantyDescription,
+        price: warrantyPrice!,
+      });
 
-      newRow.innerHTML = `
-        <td>
-          <input class="form-control" type="number" value="1" readonly />
-        </td>
-        <td>${warrantyDescription}</td>
-        <td>
-          <input class="form-control" type="text" value="${warrantyPrice}" readonly />
-        </td>
-        <td>
-          <input class="form-control" type="number" value="0" readonly />
-        </td>
-        <td>-</td>
-        <td>${warrantyPrice}</td>
-        <td class="text-right">
-          <button class="table-button" title="Eliminar item">
-            <i class="ion ion-md-trash"></i>
-          </button>
-        </td>
-      `;
-
-      // Append the new row to the table body
       tableBody.appendChild(newRow);
+
+      // Recalculate the total products price including warranty price
+      updateTotalPrice();
 
       // Optionally, add a click event listener to the delete button
       const deleteButton = newRow.querySelector('.table-button');

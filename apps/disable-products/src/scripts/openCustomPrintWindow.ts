@@ -70,12 +70,11 @@ export function openCustomPrintWindow(
 
   // Write the HTML content to the new window
   ventana.document.write(termsAndConditionsText);
-
-  // Close the document to allow the content to be loaded
   ventana.document.close();
 
   // Once the content is loaded, trigger the print dialog
   ventana.onload = function () {
     ventana.print();
+    ventana.close();
   };
 }

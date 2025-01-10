@@ -4,6 +4,7 @@ import { addDisableStyles } from '@/scripts/addDisableStyles';
 import { injectDialog } from '@/scripts/injectDialog';
 import { injectDialogStyles } from '@/scripts/injectDialogStyles';
 import { removeDuplicateButtons } from '@/scripts/removeDuplicateButtons';
+import { updateTotalPrice } from '@/scripts/updateTotalPrice';
 
 export default defineContentScript({
   matches: [
@@ -138,6 +139,10 @@ export default defineContentScript({
           document
             .querySelectorAll('[data-dialog="row"]')
             .forEach(row => row.remove());
+
+          document.querySelector(
+            '.btn.btn-success.full-width.btn-big .pull-right.ng-binding',
+          )!.textContent = '$0.00';
         });
       }
     }
@@ -149,7 +154,7 @@ export default defineContentScript({
 
       const observer = new MutationObserver(() => {
         removeDuplicateButtons();
-
+        attachDeleteListeners();
         deleteInjectedRowsFromTable();
       });
 
@@ -190,6 +195,21 @@ export default defineContentScript({
       console.log('Observing product list for changes.');
     }
 
+    function attachDeleteListeners() {
+      const table = document.getElementById('tablaFacturacion');
+
+      if (!table) return;
+
+      const deleteButtons = table.querySelectorAll('[title="Eliminar item"]');
+
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          console.log('ELIMINADO ITEM...');
+          updateTotalPrice();
+        });
+      });
+    }
+
     // Run when the page has loaded
     window.addEventListener('load', async () => {
       // Get access token and store it in local storage
@@ -197,11 +217,16 @@ export default defineContentScript({
       if (token) {
         localStorage.setItem('contabilium_access_token', token);
       }
+      // Observers
       observeDOM();
       observeProductList();
       removeDuplicateButtons();
+
+      // Injects elements
       injectDialog();
       injectDialogStyles();
+
+      disableOutOfStockItems();
     });
   },
 });
