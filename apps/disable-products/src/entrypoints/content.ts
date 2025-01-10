@@ -86,8 +86,11 @@ export default defineContentScript({
       dialogPlaceholder.textContent = title;
 
       // Calculate prices with extended warranties
-      const priceWithOneYearWarranty = price * 1.3;
-      const priceWithTwoYearWarranty = price * 1.6;
+      const porcenajeUnAñoGarantia = 1.25;
+      const porcenajeDosAñosGarantia = 1.45;
+
+      const priceWithOneYearWarranty = price * porcenajeUnAñoGarantia;
+      const priceWithTwoYearWarranty = price * porcenajeDosAñosGarantia;
 
       // Render the options
       unAñoGarantiaPricePlaceholder.innerHTML = formatCurrency(

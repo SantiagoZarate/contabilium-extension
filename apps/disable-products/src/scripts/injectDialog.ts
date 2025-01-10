@@ -21,7 +21,7 @@ export function injectDialog(): void {
             <div class="radio-text">
               <p>1 año de garantía extendida</p>
               <div>
-                <span>30% |</span>
+                <span>25% |</span>
                 <span id="dialog-1-año"></span>
               </div>
             </div>
@@ -31,7 +31,7 @@ export function injectDialog(): void {
             <div class="radio-text">
               <p>2 años de garantía extendida</p>
               <div>
-                <span>60% |</span>
+                <span>45% |</span>
                 <span id="dialog-2-años"></span>
               </div>
             </div>
