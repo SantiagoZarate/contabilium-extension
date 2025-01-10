@@ -1,5 +1,8 @@
 import { contabiliumApi } from '@/api/contabilium';
+import { formatCurrency } from '@/helpers/formatCurrency';
 import { addDisableStyles } from '@/scripts/addDisableStyles';
+import { injectDialog } from '@/scripts/injectDialog';
+import { injectDialogStyles } from '@/scripts/injectDialogStyles';
 import { removeDuplicateButtons } from '@/scripts/removeDuplicateButtons';
 
 export default defineContentScript({
@@ -9,7 +12,8 @@ export default defineContentScript({
   ],
   runAt: 'document_idle',
   main() {
-    const DEPOSITO = 'SHOWROOM PRINGLES';
+    const DEPOSITO = 'LOCAL RIVADAVIA';
+    // const DEPOSITO = 'SHOWROOM PRINGLES';
     // Function to handle product selection
     async function onProductSelect(productName: string) {
       const productData = await contabiliumApi.getProductByName(productName);
@@ -71,28 +75,61 @@ export default defineContentScript({
       }, 1000);
     }
 
-    function showDialog(title: string, content: string): void {
+    function showDialog(title: string, price: number): void {
       const dialog = document.getElementById('product-dialog')!;
-      const dialogTitle = document.getElementById('dialog-title')!;
-      const dialogContent = document.getElementById('dialog-content')!;
+      const dialogPlaceholder = document.getElementById('dialog-placeholder')!;
+      const unAñoGarantiaPricePlaceholder =
+        document.getElementById('dialog-1-año')!;
+      const dosAñosGarantiaPricePlaceholder =
+        document.getElementById('dialog-2-años')!;
 
-      dialogTitle.textContent = title;
-      dialogContent.textContent = content;
+      dialogPlaceholder.textContent = title;
+
+      // Calculate prices with extended warranties
+      const priceWithOneYearWarranty = price * 1.3;
+      const priceWithTwoYearWarranty = price * 1.6;
+
+      // Render the options
+      unAñoGarantiaPricePlaceholder.innerHTML = formatCurrency(
+        priceWithOneYearWarranty,
+      );
+      dosAñosGarantiaPricePlaceholder.innerHTML = formatCurrency(
+        priceWithTwoYearWarranty,
+      );
 
       // Show the dialog
       dialog.classList.remove('hidden');
     }
 
-    // async function addClickListenersToProducts() {
-    //   const productItems =
-    //     document.querySelectorAll<HTMLElement>('.item-product');
+    async function addClickListenersToProducts() {
+      const productItems =
+        document.querySelectorAll<HTMLElement>('.item-product');
 
-    //   productItems.forEach(async item => {
-    //     const productName = item.querySelector('h5')?.textContent?.trim();
+      productItems.forEach(async item => {
+        item.addEventListener('click', () => {
+          const productName = item.querySelector('h5')?.textContent?.trim();
+          const productPriceText = item
+            .querySelector('.price')
+            ?.textContent?.trim();
 
-    //     item.addEventListener('click', () => {});
-    //   });
-    // }
+          // Extract and parse the price
+          const productPrice = parseFloat(
+            productPriceText?.replace(/[^\d.-]/g, '') || '0',
+          );
+
+          showDialog(productName!, productPrice);
+        });
+
+        // Prevent dialog opening when clicking on the "Stock" text
+        const stockLink = item.querySelector('.info .code a');
+        if (stockLink) {
+          stockLink.addEventListener('click', event => {
+            console.log('Clicked on Stock link, preventing dialog!');
+            event.stopPropagation(); // Prevent the event from bubbling up
+          });
+        }
+      });
+    }
 
     // Function to disable out-of-stock items
     async function disableOutOfStockItems() {
@@ -108,6 +145,11 @@ export default defineContentScript({
         } else {
           // Sino hacer una request y checkear si tiene stock para mercado libre
           const productName = item.querySelector('h5')?.textContent?.trim()!;
+
+          if (!productName) {
+            return;
+          }
+
           const product = await contabiliumApi.getProductByName(productName);
 
           const productSku = product?.Items[0].Codigo;
@@ -141,7 +183,7 @@ export default defineContentScript({
       const observer = new MutationObserver(() => {
         disableOutOfStockItems();
         removeDuplicateButtons();
-        // addClickListenersToProducts();
+        addClickListenersToProducts();
       });
 
       observer.observe(targetNode, config);
@@ -156,7 +198,9 @@ export default defineContentScript({
       }
       observeDOM();
       removeDuplicateButtons();
-      // addClickListenersToProducts();
+      injectDialog();
+      injectDialogStyles();
+      addClickListenersToProducts();
     });
   },
 });

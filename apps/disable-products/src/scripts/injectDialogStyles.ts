@@ -7,6 +7,10 @@ export function injectDialogStyles(): void {
   const style = document.createElement('style');
   style.id = 'dialog-styles';
   style.textContent = `
+    :root{
+      --accent: #007bff;
+    }
+
     .dialog-overlay {
       position: fixed;
       top: 0;
@@ -23,24 +27,58 @@ export function injectDialogStyles(): void {
       background: white;
       padding: 20px;
       border-radius: 8px;
-      width: 300px;
+      width: 350px;
       text-align: center;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .radio-group label{
+      display: flex;
+      align-items: center;
+      transition: background-color 200ms;
+      padding: .5em;
+      border-radius: .25em;
+      gap: .5em;
+    }
+    .radio-group label:hover {
+      background-color: #dddddd;
+      cursor: pointer;
+    }
+    .radio-text{
+      display: flex;
+      flex-direction: column;
+      gap: 0.25em;
+      align-items: start;
+    }
+    #dialog-1-año{
+      color: var(--accent);
+    }
+    #dialog-2-años{
+      color: var(--accent)
     }
     .hidden {
       display: none;
     }
-    #dialog-close {
+    .dialog-button {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #007bff;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      }
+    #dialog-add {
+      background-color: #007bff;
     }
-    #dialog-close:hover {
-      background-color: #0056b3;
+      #dialog-close {
+        background-color: red;
+      }
+    .dialog-button:hover {
+      opacity: 0.5;
     }
   `;
 
