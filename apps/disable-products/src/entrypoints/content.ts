@@ -15,66 +15,6 @@ export default defineContentScript({
     const DEPOSITO = 'LOCAL RIVADAVIA';
     // const DEPOSITO = 'SHOWROOM PRINGLES';
     // Function to handle product selection
-    async function onProductSelect(productName: string) {
-      const productData = await contabiliumApi.getProductByName(productName);
-
-      if (!productData) {
-        return;
-      }
-
-      const productSKU = productData.Items[0]?.Codigo;
-
-      if (!productSKU) {
-        return;
-      }
-
-      const result = await contabiliumApi.getStockByDepositos(productSKU);
-
-      if (!result) {
-        return;
-      }
-
-      const stockMercadoLibre = result.stock?.find(
-        deposito => deposito.Codigo === DEPOSITO,
-      );
-
-      if ((stockMercadoLibre?.StockActual ?? 0) <= 0) {
-        console.log(DEPOSITO + ' NO TIENE STOCK');
-        observeModalAndModifyContent();
-      }
-    }
-
-    function observeModalAndModifyContent(): void {
-      // Create a MutationObserver to monitor changes in the DOM
-      setTimeout(() => {
-        const modalContent = document.body.querySelector('.modal-content');
-        console.log(modalContent);
-
-        if (modalContent) {
-          // Check if the modal contains the specific text
-          const title = modalContent.querySelector('h4');
-          console.log(title);
-
-          //@ts-ignore
-          if (title) {
-            console.log('Modal content matches the text!');
-            const modalBody = modalContent.querySelector('.bootbox-body')!;
-
-            // Now, you can modify the modal content
-            modalBody.innerHTML =
-              '<b>No hay stock de este producto para tu depósito</b>';
-
-            // Find and remove the 'Aceptar' button
-            const acceptButton = modalContent.querySelector('#btnAceptar');
-            if (acceptButton) {
-              acceptButton.remove(); // Remove the accept button
-            }
-          }
-          console.log('No existe el modal!');
-        }
-      }, 1000);
-    }
-
     function showDialog(title: string, price: number): void {
       const dialog = document.getElementById('product-dialog')!;
       const dialogPlaceholder = document.getElementById('dialog-placeholder')!;
@@ -86,8 +26,8 @@ export default defineContentScript({
       dialogPlaceholder.textContent = title;
 
       // Calculate prices with extended warranties
-      const porcenajeUnAñoGarantia = 1.25;
-      const porcenajeDosAñosGarantia = 1.45;
+      const porcenajeUnAñoGarantia = 0.25;
+      const porcenajeDosAñosGarantia = 0.45;
 
       const priceWithOneYearWarranty = price * porcenajeUnAñoGarantia;
       const priceWithTwoYearWarranty = price * porcenajeDosAñosGarantia;
@@ -104,12 +44,15 @@ export default defineContentScript({
       dialog.classList.remove('hidden');
     }
 
+    // Cuando se clickea un producto abre el dialog con las opciones de garantia
     async function addClickListenersToProducts() {
       const productItems =
         document.querySelectorAll<HTMLElement>('.item-product');
 
       productItems.forEach(async item => {
-        item.addEventListener('click', () => {
+        item.removeEventListener('click', getInfoFromItemAndShowDialog);
+
+        function getInfoFromItemAndShowDialog() {
           const productName = item.querySelector('h5')?.textContent?.trim();
           const productPriceText = item
             .querySelector('.price')
@@ -121,7 +64,9 @@ export default defineContentScript({
           );
 
           showDialog(productName!, productPrice);
-        });
+        }
+
+        item.addEventListener('click', getInfoFromItemAndShowDialog);
 
         // Prevent dialog opening when clicking on the "Stock" text
         const stockLink = item.querySelector('.info .code a');
@@ -155,7 +100,13 @@ export default defineContentScript({
 
           const product = await contabiliumApi.getProductByName(productName);
 
-          const productSku = product?.Items[0].Codigo;
+          const itemAux = product?.Items[0];
+
+          if (!itemAux) {
+            return;
+          }
+
+          const productSku = itemAux.Codigo;
 
           if (!productSku) {
             return;
@@ -178,18 +129,66 @@ export default defineContentScript({
       });
     }
 
+    function deleteInjectedRowsFromTable() {
+      const deleteAllButton = document.querySelector(
+        '.btn-danger.full-width.remove-all.btn-big',
+      );
+
+      if (deleteAllButton) {
+        deleteAllButton.addEventListener('click', () => {
+          document
+            .querySelectorAll('[data-dialog="row"]')
+            .forEach(row => row.remove());
+        });
+      }
+    }
+
     // Function to observe changes in the DOM
     function observeDOM(): void {
       const targetNode = document.body;
       const config: MutationObserverInit = { childList: true, subtree: true };
 
       const observer = new MutationObserver(() => {
-        disableOutOfStockItems();
         removeDuplicateButtons();
-        addClickListenersToProducts();
+
+        deleteInjectedRowsFromTable();
       });
 
       observer.observe(targetNode, config);
+    }
+
+    function observeProductList() {
+      const productList = document.querySelector('.item-list.ng-isolate-scope');
+
+      if (!productList) {
+        console.warn('Product list not found!');
+        return;
+      }
+
+      const config: MutationObserverInit = {
+        childList: true, // Observe when child nodes are added or removed
+        subtree: false, // Observe only direct children
+      };
+
+      let debounceTimeout: number | null = null;
+
+      const observer = new MutationObserver(() => {
+        // Clear the previous timeout if it exists
+        if (debounceTimeout) {
+          clearTimeout(debounceTimeout);
+        }
+
+        // Set a new timeout
+        debounceTimeout = window.setTimeout(() => {
+          console.log('Product list changed, updating items...');
+          disableOutOfStockItems();
+          addClickListenersToProducts();
+        }, 1000); // Wait 1 second after the last change
+      });
+
+      observer.observe(productList, config);
+
+      console.log('Observing product list for changes.');
     }
 
     // Run when the page has loaded
@@ -200,6 +199,7 @@ export default defineContentScript({
         localStorage.setItem('contabilium_access_token', token);
       }
       observeDOM();
+      observeProductList();
       removeDuplicateButtons();
       injectDialog();
       injectDialogStyles();

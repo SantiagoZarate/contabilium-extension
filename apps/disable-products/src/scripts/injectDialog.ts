@@ -71,10 +71,58 @@ export function injectDialog(): void {
         'input[name="warranty"]:checked',
       ) as HTMLInputElement
     )?.value;
-    if (selectedWarranty) {
-      console.log(`Selected warranty: ${selectedWarranty}`);
-    } else {
+
+    if (!selectedWarranty) {
       console.log('No warranty option selected.');
+      return;
+    }
+
+    const warrantyDescription =
+      selectedWarranty === '1-year'
+        ? 'Extensión de mantenimiento prepago por 1 año'
+        : 'Extensión de mantenimiento prepago por 2 años';
+
+    const warrantyPrice =
+      selectedWarranty === '1-year'
+        ? document.getElementById('dialog-1-año')?.textContent
+        : document.getElementById('dialog-2-años')?.textContent;
+
+    console.log(`Selected warranty: ${selectedWarranty}`);
+
+    const tableBody = document.querySelector('#tablaFacturacion tbody');
+    if (tableBody) {
+      // Create a new row
+      const newRow = document.createElement('tr');
+      newRow.dataset.dialog = 'row';
+
+      newRow.innerHTML = `
+        <td>
+          <input class="form-control" type="number" value="1" readonly />
+        </td>
+        <td>${warrantyDescription}</td>
+        <td>
+          <input class="form-control" type="text" value="${warrantyPrice}" readonly />
+        </td>
+        <td>
+          <input class="form-control" type="number" value="0" readonly />
+        </td>
+        <td>-</td>
+        <td>${warrantyPrice}</td>
+        <td class="text-right">
+          <button class="table-button" title="Eliminar item">
+            <i class="ion ion-md-trash"></i>
+          </button>
+        </td>
+      `;
+
+      // Append the new row to the table body
+      tableBody.appendChild(newRow);
+
+      // Optionally, add a click event listener to the delete button
+      const deleteButton = newRow.querySelector('.table-button');
+      deleteButton?.addEventListener('click', () => {
+        newRow.remove();
+      });
     }
   });
 }
