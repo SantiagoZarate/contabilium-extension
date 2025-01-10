@@ -1,3 +1,5 @@
+import { openCustomPrintWindow } from './openCustomPrintWindow';
+
 export function injectDialog(): void {
   // Check if the dialog is already injected
   if (document.getElementById('product-dialog')) {
@@ -76,6 +78,15 @@ export function injectDialog(): void {
       console.log('No warranty option selected.');
       return;
     }
+
+    const productName = document.getElementById('dialog-placeholder');
+
+    // Open the print popup
+    openCustomPrintWindow(
+      productName?.textContent!,
+      new Date().toDateString(),
+      new Date().toDateString(),
+    );
 
     const warrantyDescription =
       selectedWarranty === '1-year'

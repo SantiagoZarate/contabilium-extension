@@ -72,7 +72,6 @@ export default defineContentScript({
         const stockLink = item.querySelector('.info .code a');
         if (stockLink) {
           stockLink.addEventListener('click', event => {
-            console.log('Clicked on Stock link, preventing dialog!');
             event.stopPropagation(); // Prevent the event from bubbling up
           });
         }
@@ -183,7 +182,7 @@ export default defineContentScript({
           console.log('Product list changed, updating items...');
           disableOutOfStockItems();
           addClickListenersToProducts();
-        }, 1000); // Wait 1 second after the last change
+        }, 600); // Wait 1 second after the last change
       });
 
       observer.observe(productList, config);
@@ -203,7 +202,6 @@ export default defineContentScript({
       removeDuplicateButtons();
       injectDialog();
       injectDialogStyles();
-      addClickListenersToProducts();
     });
   },
 });
