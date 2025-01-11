@@ -1,8 +1,8 @@
 import { contabiliumApi } from '@/api/contabilium';
-import { injectProductRow } from './injectProductRow';
-import { openCustomPrintWindow } from './openCustomPrintWindow';
-import { updateTotalPrice } from './updateTotalPrice';
+import { openCustomPrintWindow } from '../openCustomPrintWindow';
+import { updateTotalPrice } from '../updateTotalPrice';
 import { add, format } from 'date-fns';
+import { injectProductRow } from './injectProductRow';
 
 export function injectDialog(): void {
   // Check if the dialog is already injected

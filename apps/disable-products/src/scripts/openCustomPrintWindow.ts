@@ -79,6 +79,6 @@ export function openCustomPrintWindow(
   // Once the content is loaded, trigger the print dialog
   ventana.onload = function () {
     ventana.print();
-    // ventana.close();
+    ventana.close();
   };
 }
