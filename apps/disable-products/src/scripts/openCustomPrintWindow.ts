@@ -1,9 +1,13 @@
+import { format } from 'date-fns';
+
 export function openCustomPrintWindow(
   productName: string,
   officialWarrantyDate: string,
   extendedWarrantyDate: string,
+  mesesPrint: string,
 ) {
-  const currentDate = new Date().toLocaleDateString(); // Today's date (Fecha de emisión)
+  const currentDate = new Date(); // Today's date (Fecha de emisión)
+  const formattedCurrentDate = format(currentDate, 'dd/MM/yyyy');
 
   // Format the custom text
   const termsAndConditionsText = `
@@ -38,11 +42,11 @@ export function openCustomPrintWindow(
         </style>
       </head>
       <body>
-        <p class="right-text-date">${currentDate}</p>
+        <p class="right-text-date">${formattedCurrentDate}</p>
         <h2 class="center-text">Términos y condiciones</h2>
         <p class="center-text">Términos y condiciones de Extensión de mantenimiento prepago en Electronorte S.R.L.</p>
         <p>
-          Usted contrató la “Extensión de mantenimiento prepago” en <strong>${productName}</strong>, por 12 (doce) meses desde el día ${officialWarrantyDate} hasta el día ${extendedWarrantyDate}, 
+          Usted contrató la “Extensión de mantenimiento prepago” en <strong>${productName}</strong>, por ${mesesPrint} meses desde el día ${officialWarrantyDate} hasta el día ${extendedWarrantyDate}, 
           una vez terminada la garantía original; por el tiempo contratado, nos hacemos cargo de reparar, sin costo adicional, todas las fallas que se presenten en el producto por defectos 
           de fabricación y dentro de la utilización normal del equipo; bajo las mismas condiciones establecidas en la garantía de fábrica y con idénticas exclusiones que nos liberan de 
           responsabilidad.
@@ -75,6 +79,6 @@ export function openCustomPrintWindow(
   // Once the content is loaded, trigger the print dialog
   ventana.onload = function () {
     ventana.print();
-    ventana.close();
+    // ventana.close();
   };
 }
