@@ -14,6 +14,12 @@ export default defineContentScript({
   runAt: 'document_idle',
   main() {
     const DEPOSITO = 'LOCAL RIVADAVIA';
+    const ARTICULOS_CON_GARANTIA_EXTENDIDA = [
+      'ventilador',
+      'cocina',
+      'lavarropa',
+      'heladera',
+    ];
     // const DEPOSITO = 'SHOWROOM PRINGLES';
     // Function to handle product selection
     function showDialog(title: string, price: number): void {
@@ -55,16 +61,24 @@ export default defineContentScript({
 
         function getInfoFromItemAndShowDialog() {
           const productName = item.querySelector('h5')?.textContent?.trim();
-          const productPriceText = item
-            .querySelector('.price')
-            ?.textContent?.trim();
+          console.log({ productName });
 
-          // Extract and parse the price
-          const productPrice = parseFloat(
-            productPriceText?.replace(/[^\d.-]/g, '') || '0',
-          );
+          if (
+            ARTICULOS_CON_GARANTIA_EXTENDIDA.some(
+              articulo => productName?.toLowerCase().indexOf(articulo) !== -1,
+            )
+          ) {
+            const productPriceText = item
+              .querySelector('.price')
+              ?.textContent?.trim();
 
-          showDialog(productName!, productPrice);
+            // Extract and parse the price
+            const productPrice = parseFloat(
+              productPriceText?.replace(/[^\d.-]/g, '') || '0',
+            );
+
+            showDialog(productName!, productPrice);
+          }
         }
 
         item.addEventListener('click', getInfoFromItemAndShowDialog);
