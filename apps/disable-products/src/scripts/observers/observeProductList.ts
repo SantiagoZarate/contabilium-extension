@@ -27,7 +27,7 @@ export function observeProductList() {
       console.log('Product list changed, updating items...');
       disableOutOfStockItems();
       addClickListenersToProducts();
-    }, 300); // Wait 1 second after the last change
+    }, 300); // Wait 300ms after the last change
   });
 
   observer.observe(productList, config);

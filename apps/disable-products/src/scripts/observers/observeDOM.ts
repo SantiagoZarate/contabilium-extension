@@ -4,7 +4,6 @@ import { disableOutOfStockItems } from '../disableOutOfStockItem';
 import { removeDuplicateButtons } from '../removeDuplicateButtons';
 
 export function observeDOM(): void {
-  let firstTimeLoadingDOM = true;
   const targetNode = document.body;
   const config: MutationObserverInit = { childList: true, subtree: true };
 
@@ -12,11 +11,6 @@ export function observeDOM(): void {
     removeDuplicateButtons();
     attachDeleteListeners();
     deleteInjectedRowsFromTable();
-
-    if (firstTimeLoadingDOM) {
-      disableOutOfStockItems();
-      firstTimeLoadingDOM = false;
-    }
   });
 
   observer.observe(targetNode, config);

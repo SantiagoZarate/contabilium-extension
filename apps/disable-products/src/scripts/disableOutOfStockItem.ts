@@ -3,6 +3,9 @@ import { addDisableStyles } from './addDisableStyles';
 
 const DEPOSITO = 'LOCAL RIVADAVIA';
 
+// Cache local para evitar hacer llamados a la api si el producto ya fue consultado
+const productsAlreadyFetched: { [key: string]: number } = {};
+
 export async function disableOutOfStockItems() {
   const items = document.querySelectorAll<HTMLElement>('.item-product');
   items.forEach(async item => {
@@ -16,6 +19,15 @@ export async function disableOutOfStockItems() {
       const productName = item.querySelector('h5')?.textContent?.trim()!;
 
       if (!productName) {
+        return;
+      }
+
+      const productCached = productsAlreadyFetched[productName];
+
+      if (productCached) {
+        if (productCached === 0) {
+          addDisableStyles(item);
+        }
         return;
       }
 
@@ -33,17 +45,19 @@ export async function disableOutOfStockItems() {
         return;
       }
 
-      const stock = await contabiliumApi.getStockByDepositos(productSku);
+      const result = await contabiliumApi.getStockByDepositos(productSku);
 
-      if (!stock) {
+      if (!result) {
         return;
       }
 
-      const mercadoLibreStock = stock.stock?.find(
+      const stockPorDeposito = result.stock?.find(
         deposito => deposito.Codigo === DEPOSITO,
       );
 
-      if (mercadoLibreStock?.StockActual === 0) {
+      productsAlreadyFetched.productName = stockPorDeposito?.StockActual ?? 0;
+
+      if (stockPorDeposito?.StockActual === 0) {
         addDisableStyles(item);
       }
     }

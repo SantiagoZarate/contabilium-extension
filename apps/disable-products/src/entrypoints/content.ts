@@ -1,5 +1,4 @@
 import { contabiliumApi } from '@/api/contabilium';
-import { disableOutOfStockItems } from '@/scripts/disableOutOfStockItem';
 import { injectDialog } from '@/scripts/injecters/injectDialog';
 import { injectDialogStyles } from '@/scripts/injecters/injectDialogStyles';
 import { observeDOM } from '@/scripts/observers/observeDOM';
@@ -27,7 +26,6 @@ export default defineContentScript({
       injectDialog();
       injectDialogStyles();
 
-      disableOutOfStockItems();
       removeDuplicateButtons();
     });
   },

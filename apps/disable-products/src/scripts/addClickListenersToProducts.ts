@@ -8,6 +8,8 @@ const ARTICULOS_CON_GARANTIA_EXTENDIDA = [
 ];
 
 export async function addClickListenersToProducts() {
+  console.log('AGREGANDO EVENT LISTENER');
+
   const productItems = document.querySelectorAll<HTMLElement>('.item-product');
 
   productItems.forEach(async item => {
