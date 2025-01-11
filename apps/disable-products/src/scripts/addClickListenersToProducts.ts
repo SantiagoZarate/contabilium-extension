@@ -2,8 +2,6 @@ import { ARTICULOS_CON_GARANTIA_EXTENDIDA } from '@/data/constants/articulosConG
 import { showDialog } from './showDialog';
 
 export async function addClickListenersToProducts() {
-  console.log('AGREGANDO EVENT LISTENER');
-
   const productItems = document.querySelectorAll<HTMLElement>('.item-product');
 
   productItems.forEach(async item => {
