@@ -61,7 +61,6 @@ export default defineContentScript({
 
         function getInfoFromItemAndShowDialog() {
           const productName = item.querySelector('h5')?.textContent?.trim();
-          console.log({ productName });
 
           if (
             ARTICULOS_CON_GARANTIA_EXTENDIDA.some(
@@ -201,7 +200,7 @@ export default defineContentScript({
           console.log('Product list changed, updating items...');
           disableOutOfStockItems();
           addClickListenersToProducts();
-        }, 600); // Wait 1 second after the last change
+        }, 300); // Wait 1 second after the last change
       });
 
       observer.observe(productList, config);
@@ -239,7 +238,6 @@ export default defineContentScript({
       // Injects elements
       injectDialog();
       injectDialogStyles();
-
       disableOutOfStockItems();
     });
   },

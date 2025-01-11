@@ -135,8 +135,6 @@ export function injectDialog(): void {
         ? document.getElementById('dialog-1-año')?.textContent
         : document.getElementById('dialog-2-años')?.textContent;
 
-    console.log(`Selected warranty: ${selectedWarranty}`);
-
     const tableBody = document.querySelector('#tablaFacturacion tbody');
     if (tableBody) {
       // Create a new row
