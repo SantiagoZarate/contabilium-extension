@@ -1,6 +1,5 @@
 import { contabiliumApi } from '@/api/contabilium';
 import { openCustomPrintWindow } from '../openCustomPrintWindow';
-import { updateTotalPrice } from '../updateTotalPrice';
 import { add, format } from 'date-fns';
 import { injectProductRow } from './injectProductRow';
 
@@ -9,8 +8,6 @@ export function injectDialog(): void {
   if (document.getElementById('product-dialog')) {
     return;
   }
-
-  console.log('Inyectando dialog');
 
   // Create dialog container
   const dialogHTML = `
@@ -144,9 +141,6 @@ export function injectDialog(): void {
       });
 
       tableBody.appendChild(newRow);
-
-      // Recalculate the total products price including warranty price
-      updateTotalPrice();
 
       // Optionally, add a click event listener to the delete button
       const deleteButton = newRow.querySelector('.table-button');

@@ -1,19 +1,19 @@
 import { contabiliumApi } from '@/api/contabilium';
-import { addDisableStyles } from './addDisableStyles';
-
-const DEPOSITO = 'LOCAL RIVADAVIA';
+import { disableProductStyles } from './addDisableStyles';
+import { DEPOSITO } from '@/data/constants/deposito';
 
 // Cache local para evitar hacer llamados a la api si el producto ya fue consultado
 const productsAlreadyFetched: { [key: string]: number } = {};
 
 export async function disableOutOfStockItems() {
   const items = document.querySelectorAll<HTMLElement>('.item-product');
-  items.forEach(async item => {
+
+  for (const item of items) {
     const stockText = item.querySelector('.info .code b')?.textContent?.trim();
 
     // Si el stock esta en 0, desabilitarlo de una
     if (stockText === 'Stock: 0') {
-      addDisableStyles(item);
+      disableProductStyles(item);
     } else {
       // Sino hacer una request y checkear si tiene stock para mercado libre
       const productName = item.querySelector('h5')?.textContent?.trim()!;
@@ -24,9 +24,9 @@ export async function disableOutOfStockItems() {
 
       const productCached = productsAlreadyFetched[productName];
 
-      if (productCached) {
+      if (productCached !== undefined) {
         if (productCached === 0) {
-          addDisableStyles(item);
+          disableProductStyles(item);
         }
         return;
       }
@@ -55,11 +55,11 @@ export async function disableOutOfStockItems() {
         deposito => deposito.Codigo === DEPOSITO,
       );
 
-      productsAlreadyFetched.productName = stockPorDeposito?.StockActual ?? 0;
+      productsAlreadyFetched[productName] = stockPorDeposito?.StockActual ?? 0;
 
       if (stockPorDeposito?.StockActual === 0) {
-        addDisableStyles(item);
+        disableProductStyles(item);
       }
     }
-  });
+  }
 }

@@ -1,11 +1,5 @@
+import { ARTICULOS_CON_GARANTIA_EXTENDIDA } from '@/data/constants/articulosConGarantiaExtendida';
 import { showDialog } from './showDialog';
-
-const ARTICULOS_CON_GARANTIA_EXTENDIDA = [
-  'ventilador',
-  'cocina',
-  'lavarropa',
-  'heladera',
-];
 
 export async function addClickListenersToProducts() {
   console.log('AGREGANDO EVENT LISTENER');
@@ -18,6 +12,8 @@ export async function addClickListenersToProducts() {
     function getInfoFromItemAndShowDialog() {
       const productName = item.querySelector('h5')?.textContent?.trim();
 
+      // Si en alguna parte del nombre del producto clickeado se asemenja a algunas
+      // de las palabras claves, se va a abrir el dialog
       if (
         ARTICULOS_CON_GARANTIA_EXTENDIDA.some(
           articulo => productName?.toLowerCase().indexOf(articulo) !== -1,

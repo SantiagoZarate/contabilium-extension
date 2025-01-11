@@ -3,6 +3,7 @@ import { injectDialog } from '@/scripts/injecters/injectDialog';
 import { injectDialogStyles } from '@/scripts/injecters/injectDialogStyles';
 import { observeDOM } from '@/scripts/observers/observeDOM';
 import { observeProductList } from '@/scripts/observers/observeProductList';
+import { observeTablaFacturacion } from '@/scripts/observers/observeTableFacturacion';
 import { removeDuplicateButtons } from '@/scripts/removeDuplicateButtons';
 
 export default defineContentScript({
@@ -21,6 +22,7 @@ export default defineContentScript({
       // Observers
       observeDOM();
       observeProductList();
+      observeTablaFacturacion();
 
       // Injects elements
       injectDialog();

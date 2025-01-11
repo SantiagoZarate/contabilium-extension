@@ -1,4 +1,4 @@
-export function addDisableStyles(item: HTMLElement) {
+export function disableProductStyles(item: HTMLElement) {
   item.style.backgroundColor = '#f8d7da';
   item.style.pointerEvents = 'none';
   item.style.opacity = '0.5';

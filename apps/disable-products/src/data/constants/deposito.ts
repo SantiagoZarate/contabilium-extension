@@ -1,0 +1,1 @@
+export const DEPOSITO = 'LOCAL RIVADAVIA';

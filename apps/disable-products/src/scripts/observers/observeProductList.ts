@@ -30,7 +30,7 @@ export function observeProductList() {
     }, 300); // Wait 300ms after the last change
   });
 
-  observer.observe(productList, config);
+  observer.observe(productList!, config);
 
   console.log('Observing product list for changes.');
 }

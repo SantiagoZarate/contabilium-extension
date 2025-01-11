@@ -14,6 +14,12 @@ export function openCustomPrintWindow(
     <html>
       <head>
         <style>
+          @page {
+            margin: 0; /* Removes browser's header/footer space */
+          }
+          body {
+            margin: 1cm; /* Optional: Add custom margins for content */
+          }
           .center-text {
             display: flex;
             justify-content: center;

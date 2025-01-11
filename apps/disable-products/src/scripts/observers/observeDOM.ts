@@ -1,6 +1,4 @@
-import { attachDeleteListeners } from '../attachDeleteButtonListeners';
 import { deleteInjectedRowsFromTable } from '../deleteInjectedRow';
-import { disableOutOfStockItems } from '../disableOutOfStockItem';
 import { removeDuplicateButtons } from '../removeDuplicateButtons';
 
 export function observeDOM(): void {
@@ -9,7 +7,6 @@ export function observeDOM(): void {
 
   const observer = new MutationObserver(() => {
     removeDuplicateButtons();
-    attachDeleteListeners();
     deleteInjectedRowsFromTable();
   });
 
