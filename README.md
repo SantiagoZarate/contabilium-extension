@@ -1,6 +1,6 @@
 ## MONOREPO EXTENSIONES CONTABILIUM
 
-### apps
+### apps - Usando WXT (Framework para hacer extensiones web)
 
 desabilitar-funciones;
 

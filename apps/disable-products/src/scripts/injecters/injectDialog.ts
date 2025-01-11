@@ -68,7 +68,7 @@ export function injectDialog(): void {
     const dialog = document.getElementById('product-dialog')!;
     dialog.classList.add('hidden');
 
-    // Handle adding the selected warranty (for now, just log the selected option)
+    // Handle adding the selected warranty
     const selectedWarranty = (
       document.querySelector(
         'input[name="warranty"]:checked',
